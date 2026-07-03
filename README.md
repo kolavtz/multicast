@@ -15,6 +15,34 @@ bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Multicast v1 is an omnichannel video publishing app that lets creators upload a single video once and automatically distribute it to YouTube, TikTok, Instagram, and Facebook.  This README describes what Multicast v1 does, how to set it up, and how to use it for multi-platform posting. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+
+## Overview
+
+Multicast v1 centralizes your short-form and long-form video distribution into one dashboard, replacing separate uploads for each platform with a single workflow.  After connecting your social accounts via OAuth, you can upload a video, add metadata, choose target platforms, and let the jobs runner handle background publishing and retries. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+
+## Features
+
+- Single video upload, multi-platform posting to YouTube, Facebook Pages, Instagram Reels, and TikTok. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+- OAuth-based account connections with encrypted tokens stored in Supabase tables like `connected_accounts`. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+- Scheduling engine that queues posts for future times and processes them via a jobs-runner edge function. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+- Resumable and large-file upload support (up to 500MB) with platform-specific flows, especially for YouTube and Instagram. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+- Dashboard for stats (total posts, scheduled posts, connected accounts) and detailed job history with statuses and error logs. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+
+## Tech stack
+
+Multicast v1 is built as a Next.js/Supabase application with TypeScript middleware and edge functions.  Supabase provides authentication, database tables (`profiles`, `workspaces`, `posts`, `publish_jobs`, `media_assets`, `connected_accounts`), storage, and function hosting for `oauth-callback` and `jobs-runner`.  Frontend routes like `/login`, `/dashboard`, `/dashboard/connections`, `/dashboard/create-post`, and `/dashboard/history` power the user experience. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+
+## Getting started
+
+1. Configure OAuth apps for YouTube, TikTok, Facebook, and Instagram; add credentials to `.env.local`. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+2. Run the dev server and connect test accounts with publishing permissions through `/dashboard/connections`. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+3. Upload an MP4 (under 500MB) from `/dashboard/create-post`, select platforms, set a schedule, and submit. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+4. Trigger the jobs-runner via Supabase (`functions/v1/jobs-runner`) or let it run on schedule to process queued jobs. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
+
+## Reliability & limits
+
+The jobs-runner implements retry logic with exponential backoff and clear error messages for API failures and token issues.  Known limitations include Instagram processing delays, TikTok sandbox constraints, platform rate limits, and the need for proper page/Business account setup on Facebook and Instagram. [github](https://github.com/kolavtz/multicast/blob/master/TESTING.md)
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
